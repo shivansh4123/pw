@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shivansh Seth | Master Strategist</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Styles -->
+    <style>
+        :root {
+            --bg-color: #f8f8f8;
+            --white: #ffffff;
+            --gold: #d4af37;
+            --gold-light: #f3e5ab;
+            --gold-dark: #aa8c2c;
+            --text-dark: #1a1a1a;
+            --text-grey: #555555;
+            --shadow: 0 10px 30px rgba(0,0,0,0.08);
+            --shadow-hover: 0 20px 40px rgba(212, 175, 55, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* --- Gesture/Smooth Scroll Settings --- */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            cursor: default;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .royal-font {
+            font-family: 'Cinzel', serif;
+        }
+
+        /* --- Custom Cursor --- */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background-color 0.3s;
+            mix-blend-mode: multiply;
+        }
+        
+        .cursor.hovered {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(212, 175, 55, 0.1);
+            border-color: var(--gold-dark);
+        }
+
+        /* --- Loader --- */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: opacity 1s ease-out;
+        }
+
+        .loader-logo {
+            font-family: 'Cinzel', serif;
+            font-size: 3rem;
+            color: var(--gold);
+            letter-spacing: 5px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 0.5; transform: scale(1); }
+        }
+
+        /* --- Navigation --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(248, 248, 248, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            transition: padding 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 10px 50px;
+            box-shadow: var(--shadow);
+        }
+
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--gold);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--gold);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* --- Hero Section --- */
+        #hero {
+            height: 100vh;
+            width: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            background: radial-gradient(circle at center, #ffffff 0%, #f0f0f0 100%);
+        }
+
+        /* Canvas for Animation */
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            padding-left: 10%;
+            max-width: 600px;
+            pointer-events: none;
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .hero-title span {
+            color: var(--gold);
+            font-style: italic;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-grey);
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .cta-btn {
+            pointer-events: auto;
+            display: inline-block;
+            padding: 15px 40px;
+            background: transparent;
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gold);
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+
+        .cta-btn:hover {
+            color: var(--white);
+        }
+
+        .cta-btn:hover::before {
+            left: 0;
+        }
+
+        /* --- Sections General --- */
+        section {
+            padding: 100px 50px;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .section-header .divider {
+            width: 80px;
+            height: 3px;
+            background: var(--gold);
+            margin: 0 auto;
+        }
+
+        /* --- About Section --- */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .about-text p {
+            margin-bottom: 20px;
+            line-height: 1.8;
+            color: var(--text-grey);
+            font-size: 1.05rem;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            background: var(--white);
+            box-shadow: var(--shadow);
+            border-bottom: 3px solid var(--gold);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .stat-number {
+            display: block;
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            color: var(--gold-dark);
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--text-grey);
+            letter-spacing: 1px;
+        }
+
+        .about-visual {
+            position: relative;
+            height: 400px;
+            background: #000;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .code-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            color: #d4af37;
+            font-family: monospace;
+            padding: 20px;
+            font-size: 0.85rem;
+            opacity: 0.9;
+            overflow: hidden;
+            white-space: pre-wrap;
+        }
+
+        /* --- Strategy Section --- */
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .strategy-card {
+            background: var(--white);
+            width: 300px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            border-top: 4px solid transparent;
+        }
+
+        .strategy-card:hover {
+            transform: translateY(-15px);
+            border-top: 4px solid var(--gold);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+
+        .strategy-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        .strategy-card p {
+            color: var(--text-grey);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* --- Contact Section --- */
+        #contact {
+            background: var(--white);
+            text-align: center;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 0;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ddd;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            border-bottom: 1px solid var(--gold);
+        }
+
+        .form-label {
+            position: absolute;
+            top: 15px;
+            left: 0;
+            color: var(--text-grey);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .form-input:focus ~ .form-label,
+        .form-input:valid ~ .form-label {
+            top: -10px;
+            font-size: 0.8rem;
+            color: var(--gold);
+        }
+
+        .contact-info-links {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .contact-link {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 0.9rem;
+            border: 1px solid #ddd;
+            padding: 10px 20px;
+            border-radius: 30px;
+            transition: all 0.3s;
+        }
+
+        .contact-link:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        /* --- Footer --- */
+        footer {
+            background: #111;
+            color: #888;
+            padding: 50px 0;
+            text-align: center;
+            border-top: 2px solid var(--gold);
+        }
+
+        .social-links {
+            margin-bottom: 20px;
+        }
+
+        .social-links a {
+            color: var(--white);
+            font-size: 1.5rem;
+            margin: 0 15px;
+            transition: color 0.3s, transform 0.3s;
+            display: inline-block;
+        }
+
+        .social-links a:hover {
+            color: var(--gold);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        /* --- Toast Notification --- */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: var(--text-dark);
+            color: var(--gold);
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gold);
+        }
+
+        #toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+
+        @keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 3rem; }
+            .about-grid { grid-template-columns: 1fr; }
+            nav { padding: 20px; }
+            .nav-links { display: none; }
+            .cursor { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loader -->
+    <div id="loader">
+        <div class="loader-logo">SHIVANSH SETH</div>
+        <p style="margin-top: 10px; letter-spacing: 3px; font-size: 0.8rem;">LOADING ASSETS</p>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+
+    <!-- Toast -->
+    <div id="toast">Message Sent Successfully</div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <a href="#hero" class="logo">Shivansh <span>Seth</span></a>
+        <div class="nav-links">
+            <a href="#hero" class="hover-trigger">Home</a>
+            <a href="#about" class="hover-trigger">About</a>
+            <a href="#strategy" class="hover-trigger">Strategy</a>
+            <a href="#contact" class="hover-trigger">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section with 2D Canvas Animation -->
+    <section id="hero">
+        <canvas id="hero-canvas"></canvas>
+        <div class="hero-content">
+            <h1 class="hero-title">Mastering the <br><span>Grand Strategy</span></h1>
+            <p class="hero-subtitle">ML Engineer • Stock Market Investor • Visionary</p>
+            <a href="#strategy" class="cta-btn hover-trigger">Explore Strategy</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="section-header">
+            <h2>The Architect</h2>
+            <div class="divider"></div>
+        </div>
+        <div class="about-grid">
+            <div class="about-text">
+                <h3 class="royal-font" style="margin-bottom: 20px; color: var(--gold-dark);">Precision & Foresight</h3>
+                <p>
+                    I am Shivansh Seth, a Machine Learning Engineer applying algorithmic precision to the chaotic world of stock market investing. Just like a grandmaster in chess, I view the market not as a gamble, but as a series of calculated moves and counter-moves.
+                </p>
+                <p>
+                    My background in AI allows me to identify patterns invisible to the naked eye, creating a synergy between human intuition and data-driven logic. This royal approach to finance ensures that capital preservation and growth are not just goals, but guarantees.
+                </p>
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">ML</span>
+                        <span class="stat-label">Driven</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">5+</span>
+                        <span class="stat-label">Years Exp</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">ROI</span>
+                        <span class="stat-label">Focused</span>
+                    </div>
+                </div>
+            </div>
+            <div class="about-visual">
+                <div class="code-overlay">class GrandMaster:
+    def __init__(self):
+        self.vision = "Long_Term_Sovereignty"
+        self.tools = ["Python", "TensorFlow", "Quant_Finance"]
+
+    def evaluate_move(self, market_state):
+        # Analyze the board
+        risk = market_state.volatility
+        opportunity = market_state.sentiment
+        
+        if opportunity > risk * 2:
+            return "EXECUTE_STRATEGY"
+        else:
+            return "HOLD_PAWN_LINE"</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Strategy Section -->
+    <section id="strategy">
+        <div class="section-header">
+            <h2>Strategic Pillars</h2>
+            <div class="divider"></div>
+        </div>
+        <div class="cards-container">
+            <div class="strategy-card hover-trigger">
+                <div class="card-icon"><i class="fa-solid fa-chess-king"></i></div>
+                <h3>Calculated Moves</h3>
+                <p>Every investment decision is backed by rigorous analysis. I don't guess; I calculate probabilities and act only when the odds are in my favor.</p>
+            </div>
+            <div class="strategy-card hover-trigger">
+                <div class="card-icon"><i class="fa-solid fa-network-wired"></i></div>
+                <h3>Neural Networks</h3>
+                <p>Utilizing custom ML models to predict market shifts. Technology provides the edge; strategy provides the victory.</p>
+            </div>
+            <div class="strategy-card hover-trigger">
+                <div class="card-icon"><i class="fa-solid fa-crown"></i></div>
+                <h3>Asset Sovereignty</h3>
+                <p>True wealth is control. My approach focuses on long-term sovereignty over short-term fluctuations, ensuring a royal portfolio.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="section-header">
+            <h2>Initiate Contact</h2>
+            <div class="divider"></div>
+        </div>
+        
+        <div class="contact-form">
+            <form onsubmit="handleForm(event)">
+                <div class="form-group">
+                    <input type="text" class="form-input" required>
+                    <label class="form-label">Name</label>
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-input" required>
+                    <label class="form-label">Email</label>
+                </div>
+                <div class="form-group">
+                    <textarea class="form-input" rows="4" required></textarea>
+                    <label class="form-label">Proposal / Inquiry</label>
+                </div>
+                <div style="text-align: center; margin-top: 40px;">
+                    <button type="submit" class="cta-btn hover-trigger" style="background: var(--gold); color: white;">Send Message</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="contact-info-links">
+            <a href="mailto:inshivansh2008@gmail.com" class="contact-link"><i class="fa-solid fa-envelope"></i> inshivansh2008@gmail.com</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="social-links">
+            <a href="https://www.linkedin.com/in/shivansh-seth-546407265/" target="_blank" class="hover-trigger"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="https://github.com/shivansh4123" target="_blank" class="hover-trigger"><i class="fa-brands fa-github"></i></a>
+            <a href="mailto:inshivansh2008@gmail.com" class="hover-trigger"><i class="fa-solid fa-envelope"></i></a>
+        </div>
+        <p class="copyright">© 2023 Shivansh Seth. All Rights Reserved. | Master Strategist</p>
+    </footer>
+
+    <!-- Scripts -->
+    <!-- No Three.js needed anymore -->
+
+    <script>
+        // --- Custom Cursor Logic ---
+        const cursor = document.querySelector('.cursor');
+        const hoverTriggers = document.querySelectorAll('.hover-trigger, a, button, input, textarea');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        hoverTriggers.forEach(trigger => {
+            trigger.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            trigger.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+        // --- Loader Logic ---
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 1000);
+            }, 1000);
+        });
+
+        // --- Hero Canvas Animation (Golden Bull Market Chart) ---
+        const initCanvas = () => {
+            const canvas = document.getElementById('hero-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            let width, height;
+            let points = [];
+            let particles = [];
+            let mouseX = 0;
+            
+            const resize = () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+                initPoints();
+            };
+
+            // Generate the trend line (The "Bull")
+            const initPoints = () => {
+                points = [];
+                const step = width / 100;
+                let y = height / 2;
+                
+                for(let x = 0; x <= width + step; x += step) {
+                    // Random fluctuation with upward trend (Bullish)
+                    const noise = (Math.random() - 0.4) * 50;
+                    const trend = (x / width) * (height * 0.5); // Upward trend
+                    y = (height / 2) - trend + noise;
+                    points.push({x, y, originalY: y});
+                }
+            };
+
+            // Particle System for the glowing line
+            class Particle {
+                constructor(x, y) {
+                    this.x = x;
+                    this.y = y;
+                    this.vx = (Math.random() - 0.5) * 2;
+                    this.vy = (Math.random() - 0.5) * 2;
+                    this.life = 1;
+                    this.size = Math.random() * 3 + 1;
+                }
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    this.life -= 0.02;
+                }
+                draw() {
+                    ctx.globalAlpha = this.life;
+                    ctx.fillStyle = '#d4af37';
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            // Mouse Interaction
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                
+                // Create ripple effect on points
+                points.forEach(p => {
+                    const dx = p.x - mouseX;
+                    const dist = Math.abs(dx);
+                    if(dist < 200) {
+                        const force = (200 - dist) * 0.1;
+                        p.y += (Math.random() - 0.5) * force;
+                    }
+                });
+            });
+
+            window.addEventListener('resize', resize);
+            resize();
+
+            let offset = 0;
+
+            const animate = () => {
+                ctx.clearRect(0, 0, width, height);
+
+                // Draw Grid Lines (Background)
+                ctx.strokeStyle = 'rgba(0,0,0,0.05)';
+                ctx.lineWidth = 1;
+                for(let i=0; i<width; i+=50) {
+                    ctx.beginPath();
+                    ctx.moveTo(i, 0);
+                    ctx.lineTo(i, height);
+                    ctx.stroke();
+                }
+                for(let i=0; i<height; i+=50) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, i);
+                    ctx.lineTo(width, i);
+                    ctx.stroke();
+                }
+
+                // Update Points (Return to original + slight wave)
+                offset += 0.05;
+                points.forEach((p, i) => {
+                    // Gentle wave
+                    const wave = Math.sin(i * 0.1 + offset) * 10;
+                    // Ease back to track
+                    p.y += (p.originalY + wave - p.y) * 0.05;
+                });
+
+                // Draw Glow Gradient Under Line
+                const gradient = ctx.createLinearGradient(0, height/2, width, 0);
+                gradient.addColorStop(0, 'rgba(212, 175, 55, 0)');
+                gradient.addColorStop(0.5, 'rgba(212, 175, 55, 0.2)');
+                gradient.addColorStop(1, 'rgba(212, 175, 55, 0)');
+                
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.moveTo(0, height);
+                points.forEach(p => ctx.lineTo(p.x, p.y));
+                ctx.lineTo(width, height);
+                ctx.fill();
+
+                // Draw The Gold Line
+                ctx.strokeStyle = '#d4af37';
+                ctx.lineWidth = 4;
+                ctx.lineCap = 'round';
+                ctx.shadowColor = '#d4af37';
+                ctx.shadowBlur = 15;
+                ctx.beginPath();
+                points.forEach((p, i) => {
+                    if(i === 0) ctx.moveTo(p.x, p.y);
+                    else ctx.lineTo(p.x, p.y);
+                });
+                ctx.stroke();
+                ctx.shadowBlur = 0; // Reset
+
+                // Draw Particles
+                if(Math.random() > 0.8) {
+                    // Add particle at a random point on the line
+                    const rp = points[Math.floor(Math.random() * points.length)];
+                    particles.push(new Particle(rp.x, rp.y));
+                }
+
+                particles.forEach((p, index) => {
+                    p.update();
+                    p.draw();
+                    if(p.life <= 0) particles.splice(index, 1);
+                });
+
+                requestAnimationFrame(animate);
+            };
+
+            animate();
+        };
+
+        // --- Form Handling ---
+        function handleForm(e) {
+            e.preventDefault();
+            const toast = document.getElementById("toast");
+            toast.className = "show";
+            setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+            e.target.reset();
+            console.log("Form submitted.");
+        }
+
+        // --- Scroll Animations ---
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.strategy-card, .section-header, .stat-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(40px)';
+            el.style.transition = 'all 0.8s ease-out';
+            observer.observe(el);
+        });
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Initialize Everything
+        initCanvas();
+
+    </script>
+</body>
+</html>
